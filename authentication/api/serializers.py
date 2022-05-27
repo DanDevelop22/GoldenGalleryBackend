@@ -2,7 +2,7 @@ import email
 from rest_framework import serializers
 from authentication import models
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer): 
     """Serializa objetos de perfil de usuario"""
     class Meta:
         model = models.UserProfile
@@ -33,3 +33,9 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         return super().update(instance, validated_data) 
+
+
+class RegisterSerializer(serializers.Serializer):
+    """Serializador para el registro"""
+    name = serializers.CharField(max_length=255)
+    email = serializers.EmailField(max_length=None, min_length=None,allow_blank=False)
