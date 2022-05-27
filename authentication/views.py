@@ -27,6 +27,8 @@ class UserRegistrationAPI(views.APIView):
 
 
     def post():
+        serializer = self.serializer_class(data=request.data)
+
         pass
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
