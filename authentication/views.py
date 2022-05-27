@@ -1,13 +1,17 @@
-import email
-from re import search
-from urllib import request, response
-from django.shortcuts import render
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, status
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from authentication.api import serializers, permissions
 from authentication import models
-# Create your views here.
 
+
+class ApiPrueba(APIView):
+    """Esta api es de prueba para llamarla en flutter"""
+    
+    def get(self, request):
+        return Response({'data': 'Probando Apis en Flutter'}, status=status.HTTP_200_OK)
 
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
