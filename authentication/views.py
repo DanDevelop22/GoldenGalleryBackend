@@ -1,8 +1,9 @@
 import email
 from re import search
+from unicodedata import name
 from urllib import request, response
 from django.shortcuts import render
-from rest_framework import viewsets, filters, views
+from rest_framework import viewsets, filters, views, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -16,7 +17,7 @@ from rest_framework.authtoken.models import Token
 
 class UserRegistrationAPI(views.APIView):
     """APIView para los registros de usuarios"""
-    serializer_class= serializers.UserSerializer
+    serializer_class= serializers.RegisterSerializer
 
     def get(self, request, format=None):
         """Devuelve caracteristicas del APIView"""
@@ -26,10 +27,20 @@ class UserRegistrationAPI(views.APIView):
         return Response({'message':'Hola', 'apiview': apiview})
 
 
-    def post():
+    def post(self, request):
         serializer = self.serializer_class(data=request.data)
 
-        pass
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            message = f'Hola { name }'
+
+            return Response({'message':message})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserSerializer
