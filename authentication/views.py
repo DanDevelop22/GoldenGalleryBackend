@@ -19,6 +19,8 @@ class UserRegistrationAPI(views.APIView):
     """APIView para los registros de usuarios"""
     serializer_class= serializers.RegisterSerializer
 
+    
+
     def get(self, request, format=None):
         """Devuelve caracteristicas del APIView"""
         apiview = [
@@ -33,7 +35,7 @@ class UserRegistrationAPI(views.APIView):
         if serializer.is_valid():
             name = serializer.validated_data.get('name')
             message = f'Hola { name }'
-
+            serializer.save()
             return Response({'message':message})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

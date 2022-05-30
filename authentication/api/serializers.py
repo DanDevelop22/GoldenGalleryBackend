@@ -35,7 +35,27 @@ class UserSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data) 
 
 
-class RegisterSerializer(serializers.Serializer):
+class RegisterSerializer(serializers.ModelSerializer):
     """Serializador para el registro"""
-    name = serializers.CharField(max_length=255)
-    email = serializers.EmailField(max_length=None, min_length=None,allow_blank=False)
+    class Meta:
+        model = models.UserProfile
+        fields = ('id','email','name','password')
+        extra_keywords = {
+            'password':{
+                'write_only': True,
+                'style':{'input_style':'password'}
+            }
+        }     
+
+    def create(self, validated_data):
+        """Crear y devolver un nuevo usuario"""
+        user = models.UserProfile.objects.create_user(
+            email=validated_data['email'],
+            name=validated_data['name'],
+            password=validated_data['password']
+
+        )
+
+        return user
+    
+    
