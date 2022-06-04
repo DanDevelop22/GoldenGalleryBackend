@@ -2,15 +2,23 @@ import email
 from re import search
 from unicodedata import name
 from urllib import request, response
+from django.conf import settings
 from django.shortcuts import render
 from rest_framework import viewsets, filters, views, status
+
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
+from authentication.api.serializers import UserSerializer
+from authentication.models import UserProfile
 from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
 from rest_framework.authtoken.models import Token
+from django.core.mail import EmailMessage
+from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 
@@ -34,7 +42,11 @@ class UserRegistrationAPI(views.APIView):
 
         if serializer.is_valid():
             name = serializer.validated_data.get('name')
+            email = serializer.validated_data.get('email')
             message = f'Hola { name }'
+            send_mail(f'Bienvenido { name }',
+            'Creacion de cuenta exitosa',None,
+            [email])
             serializer.save()
             return Response({'message':message})
         else:
@@ -46,12 +58,27 @@ class UserRegistrationAPI(views.APIView):
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserSerializer
-    queryset = models.UserProfile.objects.all()
+    queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (permissions.UpdateOwnProfile,)
+    permission_classes = (permissions.UpdateOwnProfile,IsAuthenticated)
+    
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('name', 'email',)
+    filter_fields = ('name',)
+    search_fields = ('^name', 'email',)
+    ordering_fields = ('name',)
+    def list(self, request):
+        queryset = UserProfile.objects.all()
+        serializer = UserSerializer(queryset, many=True)
+        return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        queryset = UserProfile.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = serializers.UserSerializer(user)
+        return Response(serializer.data)
+    def perform_create(self, serializer):
+        serializer.save(name=self.request.user)
+        
 class UserLoginApiView(ObtainAuthToken):
     """Crea tokens de autenticacion de usuario"""
     def post(self, request, *args, **kwargs):

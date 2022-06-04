@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,6 +15,13 @@ SECRET_KEY = 'django-insecure-4p=4%i*5bzpz=jv!%e@v9%goccxcmw_2n71qc9t+@g#9(ism6h
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = ''
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 
 # Application definition
@@ -27,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-
+    'django_filters',
     'authentication',
 ]
 
@@ -36,11 +44,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+   
+    
 ]
 
 ROOT_URLCONF = 'DjangoBackend.urls'
@@ -93,11 +104,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
 
+'DEFAULT_PAGINATION_CLASS':
+'authentication.custompagination.LimitOffsetPaginationWithUpperBound',
+'PAGE_SIZE': 4,
+'DEFAULT_FILTER_BACKENDS': [
+'django_filters.rest_framework.DjangoFilterBackend',
+'rest_framework.filters.OrderingFilter',
+'rest_framework.filters.SearchFilter',
+],
+'DEFAULT_AUTHENTICATION_CLASSES': (
+'rest_framework.authentication.BasicAuthentication',
+'rest_framework.authentication.SessionAuthentication',
+)
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
+
+LANGUAGES = [
+    ('es',_('Spanish')),
+    ('en',_('English')),
+]
+
+LOCALE_PATH = [
+    'authentication/locale',
+]
 
 TIME_ZONE = 'UTC'
 

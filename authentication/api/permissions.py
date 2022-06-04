@@ -7,5 +7,6 @@ class UpdateOwnProfile(permissions.BasePermission):
         """Chequear el usuario esta intentando su propio perfil"""
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        return obj.id == request.user.id
+        else:
+            #El metodo no es seguro
+            return obj.id == request.user.id
