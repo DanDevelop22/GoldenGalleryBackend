@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'authentication',
+    'corsheaders',
 ]
 
 
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -54,7 +56,19 @@ MIDDLEWARE = [
    
     
 ]
-
+#Configuracion de Cross Origin
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    
+]
+CORS_ALLOW_METHODS = [
+    
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 ROOT_URLCONF = 'DjangoBackend.urls'
 
 TEMPLATES = [
@@ -89,9 +103,14 @@ import dj_database_url
 from decouple import config
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')
-    )
+    'default': {
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': BASE_DIR / 'db.sqlite3',
+     }
+    # 'default': dj_database_url.config(
+    #     default=config('DATABASE_URL')
+    # )
+    
 }
 
 # Password validation
