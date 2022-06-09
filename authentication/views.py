@@ -66,6 +66,7 @@ class UserViewsets(viewsets.ModelViewSet):
     filter_fields = ('name',)
     search_fields = ('^name', 'email',)
     ordering_fields = ('name',)
+    
     def list(self, request):
         queryset = UserProfile.objects.all()
         serializer = UserSerializer(queryset, many=True)
