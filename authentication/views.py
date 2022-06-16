@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from authentication.api.serializers import UserSerializer
+from rest_framework.decorators import action
+from authentication.api.serializers import UserViewsetSerializer
 from authentication.models import UserProfile
 from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
@@ -26,6 +27,7 @@ from django.shortcuts import get_object_or_404
 class UserRegistrationAPI(views.APIView):
     """APIView para los registros de usuarios"""
     serializer_class= serializers.RegisterSerializer
+    
 
     
 
@@ -47,8 +49,10 @@ class UserRegistrationAPI(views.APIView):
             send_mail(f'Bienvenido { name }',
             'Creacion de cuenta exitosa',None,
             [email])
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
             serializer.save()
-            return Response({'message':message})
+            return Response({'message':message,'token': token.key})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -57,10 +61,10 @@ class UserRegistrationAPI(views.APIView):
 
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
-    serializer_class = serializers.UserSerializer
+    serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication, )
-    permission_classes = (permissions.UpdateOwnProfile,IsAuthenticated)
+    #authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
     filter_fields = ('name',)
@@ -69,16 +73,30 @@ class UserViewsets(viewsets.ModelViewSet):
     
     def list(self, request):
         queryset = UserProfile.objects.all()
-        serializer = UserSerializer(queryset, many=True)
+        serializer = UserViewsetSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = UserProfile.objects.all()
         user = get_object_or_404(queryset, pk=pk)
-        serializer = serializers.UserSerializer(user)
+        serializer = serializers.UserViewsetSerializer(user)
         return Response(serializer.data)
     def perform_create(self, serializer):
         serializer.save(name=self.request.user)
+
+    
+    def destroy(self, request, pk=None):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(data={'detail':'Succesful delete'},status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
         
 class UserLoginApiView(ObtainAuthToken):
     """Crea tokens de autenticacion de usuario"""

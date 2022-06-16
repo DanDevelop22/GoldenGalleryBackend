@@ -27,6 +27,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,7 +38,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_filters',
     'authentication',
-    'corsheaders',
+    
 ]
 
 
@@ -61,6 +62,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+]
+
 CORS_ALLOW_METHODS = [
     
     "GET",
@@ -69,6 +74,20 @@ CORS_ALLOW_METHODS = [
     "POST",
     "PUT",
 ]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-token',
+    'x-requested-with',
+    
+]
+
 ROOT_URLCONF = 'DjangoBackend.urls'
 
 TEMPLATES = [
