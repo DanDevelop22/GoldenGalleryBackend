@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     
 ]
 
-
+TOKEN_EXPIRED_AFTER_SECONDS = 10
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -73,6 +73,7 @@ CORS_ALLOW_METHODS = [
     "PATCH",
     "POST",
     "PUT",
+    "DELETE",
 ]
 CORS_ALLOW_HEADERS = [
     'accept',

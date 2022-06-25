@@ -62,7 +62,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserViewsetSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','name','password')
+        fields = ('id','email','name','password','is_staff','is_active')
         extra_keywords = {
             'password':{
                 'write_only': True,

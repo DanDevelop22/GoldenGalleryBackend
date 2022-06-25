@@ -5,7 +5,7 @@ from urllib import request, response
 from django.conf import settings
 from django.shortcuts import render
 from rest_framework import viewsets, filters, views, status
-
+from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -17,6 +17,8 @@ from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
 from rest_framework.authtoken.models import Token
+
+from django.contrib.sessions.models import Session
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -81,9 +83,9 @@ class UserViewsets(viewsets.ModelViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = serializers.UserViewsetSerializer(user)
         return Response(serializer.data)
-    def perform_create(self, serializer):
-        serializer.save(name=self.request.user)
-
+    
+    
+        
     
     def destroy(self, request, pk=None):
         instance = self.get_object()
@@ -105,6 +107,29 @@ class UserLoginApiView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key,'user':user.name})
+        if created:
+            return Response(
+                {
+                'token': token.key,
+                'user':user.name,
+                'message':'Sucessful login'},
+                 status= status.HTTP_201_CREATED)
+        else:
+            all_sessions = Session.objects.filter(expire_date__gte = datetime.now())
+            if all_sessions.exists():
+                for session in all_sessions:
+                    session_data = session.get_decoded()
+                    if user.id  == int(session_data.get('_auth_user_id')):
+                        session.delete()
+            
+            token.delete()
+            token = Token.objects.create(user = user)
+            return Response(
+                {
+                'token': token.key,
+                'user':user.name,
+                'message':'Sucessful login'},
+                 status= status.HTTP_201_CREATED)
+
 
     renderer_classes= api_settings.DEFAULT_RENDERER_CLASSES
