@@ -11,6 +11,7 @@ from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
 from rest_framework.authtoken.models import Token
+from django.forms.models import model_to_dict
 # Create your views here.
 
 
@@ -51,6 +52,8 @@ class UserViewsets(viewsets.ModelViewSet):
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',)
+
+        
 
 class UserLoginApiView(ObtainAuthToken):
     """Crea tokens de autenticacion de usuario"""
