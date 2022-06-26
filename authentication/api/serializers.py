@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     """Serializa objetos de perfil de usuario"""
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','name','password')
+        fields = ('id','email','password')
         extra_keywords = {
             'password':{
                 'write_only': True,
@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
         """Crear y devolver un nuevo usuario"""
         user = models.UserProfile.objects.create_user(
             email=validated_data['email'],
-            name=validated_data['name'],
+            
             password=validated_data['password']
 
         )
@@ -39,7 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     """Serializador para el registro"""
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','name','password')
+        fields = ('id','email','password')
         extra_keywords = {
             'password':{
                 'write_only': True,
@@ -59,3 +59,33 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
     
+class UserViewsetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UserProfile
+        fields = ('id','email','name','password','is_staff','is_active')
+        extra_keywords = {
+            'password':{
+                'write_only': True,
+                'style':{'input_style':'password'}
+            }
+        }
+        
+    def create(self, validated_data):
+        """Crear y devolver un nuevo usuario"""
+        user = models.UserProfile.objects.create_user(
+            email=validated_data['email'],
+            name = validated_data['name'],
+            password=validated_data['password']
+
+        )
+
+        return user
+    
+    def update(self, instance, validated_data):
+        """Actualiza cuenta de usuario"""
+
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+
+        return super().update(instance, validated_data) 

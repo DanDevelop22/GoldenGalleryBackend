@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
+from django.utils import timezone
 # Create your models here.
 
 class UserProfileManager(BaseUserManager):
@@ -39,7 +40,8 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
@@ -55,4 +57,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-    
+
+class Cuadros(models.Model):
+    """Modelo con los datos de cada cuadro a tokenizar"""   
+    name = models.CharField(max_length=255)
+    img = models.ImageField()
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)

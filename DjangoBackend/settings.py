@@ -1,6 +1,6 @@
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 import os
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -15,11 +15,19 @@ SECRET_KEY = 'django-insecure-4p=4%i*5bzpz=jv!%e@v9%goccxcmw_2n71qc9t+@g#9(ism6h
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# Email configuration
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_HOST = ''
+# EMAIL_HOST_USER = ''
+# EMAIL_HOST_PASSWORD = ''
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -28,21 +36,58 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-
+    'django_filters',
     'authentication',
+    
 ]
 
-
+TOKEN_EXPIRED_AFTER_SECONDS = 60
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+   
+    
+]
+#Configuracion de Cross Origin
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    
+]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+    'https://ymgallerybackend.azurewebsites.net',
+]
+
+CORS_ALLOW_METHODS = [
+    
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+    "DELETE",
+]
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-token',
+    'x-requested-with',
+    
 ]
 
 ROOT_URLCONF = 'DjangoBackend.urls'
@@ -88,7 +133,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -107,11 +151,34 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
 
+'DEFAULT_PAGINATION_CLASS':
+'authentication.custompagination.LimitOffsetPaginationWithUpperBound',
+'PAGE_SIZE': 4,
+'DEFAULT_FILTER_BACKENDS': [
+'django_filters.rest_framework.DjangoFilterBackend',
+'rest_framework.filters.OrderingFilter',
+'rest_framework.filters.SearchFilter',
+],
+'DEFAULT_AUTHENTICATION_CLASSES': (
+'rest_framework.authentication.BasicAuthentication',
+'rest_framework.authentication.SessionAuthentication',
+)
+}
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
+
+LANGUAGES = [
+    ('es',_('Spanish')),
+    ('en',_('English')),
+]
+
+LOCALE_PATH = [
+    'authentication/locale',
+]
 
 TIME_ZONE = 'UTC'
 
@@ -122,7 +189,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
@@ -134,5 +205,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.UserProfile'
-
-CSRF_TRUSTED_ORIGINS = ['https://ymgallerybackend.azurewebsites.net','https://127.0.0.1']
