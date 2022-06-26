@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     
 ]
 
-TOKEN_EXPIRED_AFTER_SECONDS = 60
+TOKEN_EXPIRED_AFTER_SECONDS = 900
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
