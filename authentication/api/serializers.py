@@ -69,6 +69,7 @@ class UserViewsetSerializer(serializers.ModelSerializer):
                 'style':{'input_style':'password'}
             }
         }
+        
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""
         user = models.UserProfile.objects.create_user(

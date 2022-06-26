@@ -17,14 +17,27 @@ from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
 from rest_framework.authtoken.models import Token
-
+from authentication.authentication_mixins import Authentication 
 from django.contrib.sessions.models import Session
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
-
+class UserToken(views.APIView):
+    def get(self, request, *args,**kwargs):
+        username = request.GET.get('username')
+        try:
+            user_token = Token.objects.get(
+                user = serializers.UserSerializer().Meta.model.objects.filter(username = username).first()
+                )
+            return Response({
+                'token':user_token.key
+            })
+        except:
+            return Response({
+                'error': 'Credenciales enviadas incorrectas'
+            }, status = status.HTTP_400_BAD_REQUEST)
 
 class UserRegistrationAPI(views.APIView):
     """APIView para los registros de usuarios"""
@@ -61,11 +74,11 @@ class UserRegistrationAPI(views.APIView):
 
 
 
-class UserViewsets(viewsets.ModelViewSet):
+class UserViewsets(Authentication,viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    #authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
