@@ -137,7 +137,8 @@ class UserLoginApiView(ObtainAuthToken):
             return Response(
                 {
                 'token': token.key,
-                'user':user.name,
+                'username':user.name,
+                'email':user.email,
                 'message':'Sucessful login'},
                  status= status.HTTP_201_CREATED)
 
