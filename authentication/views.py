@@ -47,7 +47,7 @@ class UserRegistrationAPI(views.APIView):
         apiview = [
             'Metodos HTTP GET,POST,PUT,PATCH,DELETE'
         ]
-        return Response({'message':'Hola', 'apiview': apiview})
+        return Response({'message':'Api de Registro', 'apiview': apiview})
 
 
     def post(self, request):
@@ -57,9 +57,12 @@ class UserRegistrationAPI(views.APIView):
             name = serializer.validated_data.get('name')
             email = serializer.validated_data.get('email')
             message = f'Hola { name }'
-            send_mail(f'Bienvenido { name }',
-            'Creacion de cuenta exitosa',None,
-            [email])
+            try:
+                send_mail(f'Bienvenido { name }',
+                'Creacion de cuenta exitosa',None,
+                [email])
+            except Exception as e:
+                pass
             user = serializer.validated_data['user']
             token, created = Token.objects.get_or_create(user=user)
             serializer.save()
