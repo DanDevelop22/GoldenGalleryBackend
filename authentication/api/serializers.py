@@ -39,7 +39,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     """Serializador para el registro"""
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','password')
+        fields = ('id','email', 'name','password')
         extra_keywords = {
             'password':{
                 'write_only': True,

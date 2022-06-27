@@ -1,7 +1,3 @@
-import email
-from re import search
-from unicodedata import name
-from urllib import request, response
 from django.conf import settings
 from django.shortcuts import render
 from rest_framework import viewsets, filters, views, status
@@ -124,7 +120,8 @@ class UserLoginApiView(ObtainAuthToken):
             return Response(
                 {
                 'token': token.key,
-                'user':user.name,
+                'username':user.name,
+                'email':user.email,
                 'message':'Sucessful login'},
                  status= status.HTTP_201_CREATED)
         else:

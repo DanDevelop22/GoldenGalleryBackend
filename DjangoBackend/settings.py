@@ -60,7 +60,7 @@ MIDDLEWARE = [
 #Configuracion de Cross Origin
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    
+    "https://ambitious-beach-07b97fb10.1.azurestaticapps.net",
 ]
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200",
@@ -193,7 +193,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
