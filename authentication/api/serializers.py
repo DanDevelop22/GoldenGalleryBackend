@@ -1,6 +1,6 @@
-import email
 from rest_framework import serializers
 from authentication import models
+from django.contrib.auth import authenticate
 
 class UserSerializer(serializers.ModelSerializer): 
     """Serializa objetos de perfil de usuario"""

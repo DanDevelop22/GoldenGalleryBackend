@@ -38,9 +38,6 @@ class UserToken(views.APIView):
 class UserRegistrationAPI(views.APIView):
     """APIView para los registros de usuarios"""
     serializer_class= serializers.RegisterSerializer
-    
-
-    
 
     def get(self, request, format=None):
         """Devuelve caracteristicas del APIView"""
