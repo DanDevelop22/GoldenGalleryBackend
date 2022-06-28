@@ -1,7 +1,3 @@
-import email
-from re import search
-from unicodedata import name
-from urllib import request, response
 from django.conf import settings
 from django.shortcuts import render
 from rest_framework import viewsets, filters, views, status
@@ -51,7 +47,7 @@ class UserRegistrationAPI(CreateAPIView):
         apiview = [
             'Metodos HTTP GET,POST,PUT,PATCH,DELETE'
         ]
-        return Response({'message':'Hola', 'apiview': apiview})
+        return Response({'message':'Api de Registro', 'apiview': apiview})
 
 
     def create(self, request, *args, **kwargs):
@@ -73,18 +69,8 @@ class UserRegistrationAPI(CreateAPIView):
         return Response({'message':message,'token': token.key}, status=status.HTTP_201_CREATED, headers=headers)
 
     def post(self, request,*args,**kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
         
-        message = f'Hola { name }'
-        send_mail(f'Bienvenido { name }',
-        'Creacion de cuenta exitosa',None,
-        [email])
-        user = serializer.create(serializer.validated_data)
-        token, created = Token.objects.get_or_create(user=user)
-        headers = self.get_success_headers(serializer.data)
-        return Response({'token': token.key, 'username':user.name, 'email':user.email}, status=status.HTTP_201_CREATED, headers=headers)
-
+        return self.create()
 
 
 
@@ -156,7 +142,8 @@ class UserLoginApiView(ObtainAuthToken):
             return Response(
                 {
                 'token': token.key,
-                'user':user.name,
+                'username':user.name,
+                'email':user.email,
                 'message':'Sucessful login'},
                  status= status.HTTP_201_CREATED)
 

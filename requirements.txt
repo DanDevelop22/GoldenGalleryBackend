@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+Django==4.0.4
+djangorestframework==3.13.1
+django-cors-headers==3.12.0
+>>>>>>> 3513c52dfaf8258c23ff2d01a419c73a7d9e46ae
 aiosmtpd==1.4.2
 asgiref==3.5.2
 atpublic==3.0.1
@@ -15,5 +21,11 @@ pytz==2022.1
 sqlparse==0.4.2
 tzdata==2022.1
 whitenoise==6.1.0
+<<<<<<< HEAD
 psycopg2-binary
 python-dotenv
+=======
+Pillow==9.1.1
+psycopg2-binary
+python-dotenv
+>>>>>>> 3513c52dfaf8258c23ff2d01a419c73a7d9e46ae
