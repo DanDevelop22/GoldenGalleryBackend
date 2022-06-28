@@ -68,7 +68,7 @@ class UserRegistrationAPI(CreateAPIView):
         
         token, created = Token.objects.get_or_create(user=user)
         headers = self.get_success_headers(serializer.data)
-        return Response({'token': token.key, 'username':user.name,'email':user.email,'password':user.password}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'token': token.key, 'username':user.name,'email':user.email}, status=status.HTTP_201_CREATED, headers=headers)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
