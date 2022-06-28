@@ -7,6 +7,7 @@ from rest_framework.authentication import TokenAuthentication, SessionAuthentica
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.decorators import action
+from rest_framework.generics import CreateAPIView
 from authentication.api.serializers import UserViewsetSerializer
 from authentication.models import UserProfile
 from authentication.api import serializers, permissions
@@ -20,12 +21,13 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
-class UserToken(views.APIView):
+class UserToken(Authentication,views.APIView):
+    
     def get(self, request, *args,**kwargs):
-        username = request.GET.get('username')
+        
         try:
             user_token = Token.objects.get(
-                user = serializers.UserSerializer().Meta.model.objects.filter(username = username).first()
+                user = serializers.UserSerializer().Meta.model.objects.filter(username = self.user.username).first()
                 )
             return Response({
                 'token':user_token.key
@@ -35,9 +37,10 @@ class UserToken(views.APIView):
                 'error': 'Credenciales enviadas incorrectas'
             }, status = status.HTTP_400_BAD_REQUEST)
 
-class UserRegistrationAPI(views.APIView):
+class UserRegistrationAPI(CreateAPIView):
     """APIView para los registros de usuarios"""
-    serializer_class= serializers.RegisterSerializer
+    serializer_class = serializers.RegisterSerializer
+    
 
     def get(self, request, format=None):
         """Devuelve caracteristicas del APIView"""
@@ -47,34 +50,36 @@ class UserRegistrationAPI(views.APIView):
         return Response({'message':'Api de Registro', 'apiview': apiview})
 
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.create(serializer.validated_data)
+        
+        name = serializer.validated_data.get('name')
+        email = serializer.validated_data.get('email')
+        password = serializer.validated_data.get('password')
+        
+        message = f'Hola { name }'
+        send_mail(f'Bienvenido { name }',
+        'Creacion de cuenta exitosa',None,
+        [email])
+        print(serializer.validated_data)
+        
+        
+        token, created = Token.objects.get_or_create(user=user)
+        headers = self.get_success_headers(serializer.data)
+        return Response({'token': token.key, 'username':user.name,'email':user.email,'password':user.password}, status=status.HTTP_201_CREATED, headers=headers)
 
-        if serializer.is_valid():
-            name = serializer.validated_data.get('name')
-            email = serializer.validated_data.get('email')
-            message = f'Hola { name }'
-            try:
-                send_mail(f'Bienvenido { name }',
-                'Creacion de cuenta exitosa',None,
-                [email])
-            except Exception as e:
-                pass
-            user = serializer.validated_data['user']
-            token, created = Token.objects.get_or_create(user=user)
-            serializer.save()
-            return Response({'message':message,'token': token.key})
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 
-
-class UserViewsets(Authentication,viewsets.ModelViewSet):
+class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication, )
+    #authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
@@ -114,15 +119,16 @@ class UserLoginApiView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        print(serializer.validated_data)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
         if created:
             return Response(
                 {
                 'token': token.key,
-                'username':user.name,
-                'email':user.email,
-                'message':'Sucessful login'},
+                'user':user.name,
+                'message':'Sucessful login',
+                },
                  status= status.HTTP_201_CREATED)
         else:
             all_sessions = Session.objects.filter(expire_date__gte = datetime.now())
