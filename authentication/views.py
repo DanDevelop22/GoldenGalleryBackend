@@ -53,10 +53,12 @@ class UserRegistrationAPI(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        user = serializer.create(serializer.validated_data)
+        
         name = serializer.validated_data.get('name')
         email = serializer.validated_data.get('email')
         password = serializer.validated_data.get('password')
-        user = {name,email,password}
+        
         message = f'Hola { name }'
         send_mail(f'Bienvenido { name }',
         'Creacion de cuenta exitosa',None,
@@ -66,11 +68,10 @@ class UserRegistrationAPI(CreateAPIView):
         
         token, created = Token.objects.get_or_create(user=user)
         headers = self.get_success_headers(serializer.data)
-        return Response({'message':message,'token': token.key}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'token': token.key, 'username':user.name,'email':user.email,'password':user.password}, status=status.HTTP_201_CREATED, headers=headers)
 
-    def post(self, request,*args,**kwargs):
-        
-        return self.create()
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 
