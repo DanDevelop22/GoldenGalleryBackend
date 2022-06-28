@@ -68,7 +68,7 @@ class UserRegistrationAPI(CreateAPIView):
         
         token, created = Token.objects.get_or_create(user=user)
         headers = self.get_success_headers(serializer.data)
-        return Response({'token': token.key, 'username':user.name,'email':user.email,'password':user.password}, status=status.HTTP_201_CREATED, headers=headers)
+        return Response({'token': token.key, 'username':user.name,'email':user.email}, status=status.HTTP_201_CREATED, headers=headers)
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -79,7 +79,7 @@ class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    #authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
