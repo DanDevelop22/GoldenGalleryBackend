@@ -19,6 +19,7 @@ from django.contrib.sessions.models import Session
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+
 # Create your views here.
 
 class UserToken(Authentication,views.APIView):
@@ -80,7 +81,7 @@ class UserViewsets(viewsets.ModelViewSet):
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated,IsAdminUser)
+    permission_classes = (IsAuthenticated, IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
     filter_fields = ('name',)

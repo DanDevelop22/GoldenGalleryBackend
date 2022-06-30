@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.authtoken.models import Token
 
 class UpdateOwnProfile(permissions.BasePermission):
     """Permite a usuarios editar su propio perfil"""
