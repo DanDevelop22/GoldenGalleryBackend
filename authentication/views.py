@@ -8,8 +8,8 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
-from authentication.api.serializers import UserViewsetSerializer
-from authentication.models import UserProfile
+from authentication.api.serializers import CuadroSerializer, UserViewsetSerializer
+from authentication.models import Cuadro, UserProfile, UserProfileManager
 from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
@@ -79,7 +79,7 @@ class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    authentication_classes = (TokenAuthentication, )
+    #authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
@@ -150,3 +150,36 @@ class UserLoginApiView(ObtainAuthToken):
 
 
     renderer_classes= api_settings.DEFAULT_RENDERER_CLASSES
+
+
+class CuadroViewset(viewsets.ModelViewSet):
+    serializer_class = serializers.CuadroSerializer
+    queryset = Cuadro.objects.all()
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated,)
+
+    
+
+    def list(self, request):
+        queryset = Cuadro.objects.all()
+        serializer = CuadroSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Cuadro.objects.all()
+        cuadro = get_object_or_404(queryset, pk=pk)
+        serializer = CuadroSerializer(cuadro)
+        return Response(serializer.data)
+
+    def destroy(self, request, pk=None):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(data={'detail':'Succesful delete'},status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)

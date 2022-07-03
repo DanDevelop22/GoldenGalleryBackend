@@ -5,10 +5,11 @@ from authentication import views
 
 router = DefaultRouter()
 router.register('user-viewset', views.UserViewsets, basename='user-viewset')
-
+router.register('cuadro-viewset',views.CuadroViewset,basename='cuadro-viewset')
 urlpatterns = [
     path('', include(router.urls)),
     path('login/',views.UserLoginApiView.as_view()),
     path('register/',views.UserRegistrationAPI.as_view()),
+    path('refresh-token',views.UserToken.as_view(), name='refresh_token')
 ]
 

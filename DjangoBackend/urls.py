@@ -10,5 +10,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/',include('rest_framework.urls', namespace='rest_framework')),
     path('', include('authentication.urls')),
-    path('refresh-token',views.UserToken.as_view(), name='refresh_token')
+    
 ]

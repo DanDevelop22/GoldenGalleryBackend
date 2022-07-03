@@ -90,3 +90,19 @@ class UserViewsetSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         return super().update(instance, validated_data) 
+
+class CuadroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Cuadro
+        fields = ('name','img','author')
+
+    def create(self, validated_data):
+        """Crear y devolver un nuevo usuario"""
+        cuadro = models.Cuadro.objects.create(
+            name=validated_data['name'],
+            img=validated_data['img'],
+            author=validated_data['author']
+
+        )
+        print(cuadro)
+        return cuadro
