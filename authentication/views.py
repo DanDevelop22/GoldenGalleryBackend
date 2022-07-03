@@ -166,6 +166,7 @@ class CuadroViewset(viewsets.ModelViewSet):
         serializer = CuadroSerializer(cuadro)
         return Response(serializer.data)
 
+
     def destroy(self, request, pk=None):
         instance = self.get_object()
         self.perform_destroy(instance)
