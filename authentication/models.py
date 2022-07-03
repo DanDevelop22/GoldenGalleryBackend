@@ -1,8 +1,11 @@
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import BaseUserManager
 from django.utils import timezone
+from authentication.models import *
+
 # Create your models here.
 
 class UserProfileManager(BaseUserManager):
@@ -32,12 +35,13 @@ class UserProfileManager(BaseUserManager):
 
 
 
-class UserProfile(AbstractBaseUser, PermissionsMixin):
+class UserProfile(AbstractBaseUser, PermissionsMixin,models.Model):
     """Modelo base de Datos para usuarios """
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
     objects = UserProfileManager()
@@ -56,9 +60,18 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email
 
-class Cuadros(models.Model):
+class Cuadro(models.Model):
     """Modelo con los datos de cada cuadro a tokenizar"""   
     name = models.CharField(max_length=255)
-    img = models.ImageField()
+    img = models.ImageField(upload_to='static/paintings/%Y/%m/%d')
+    #user = models.OneToOneField(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
+    user = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+    
+
+    class Meta:
+        db_table = 'Cuadro'
+        ordering = ['name']
+        verbose_name = "cuadro"
