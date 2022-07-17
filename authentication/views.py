@@ -3,12 +3,14 @@ from django.forms import model_to_dict
 from django.shortcuts import render
 from rest_framework import viewsets, filters, views, status
 from datetime import datetime
+#De rest framework
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
+#De la app authentication
 from authentication.api.serializers import CuadroSerializer, UserViewsetSerializer
 from authentication.models import Cuadro, UserProfile, UserProfileManager
 from authentication.api import serializers, permissions
@@ -81,7 +83,7 @@ class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    #authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
@@ -155,10 +157,16 @@ class UserLoginApiView(ObtainAuthToken):
 
 
 class CuadroViewset(viewsets.ModelViewSet):
+    """APIViewset es para el modelo cuadro tiene su respectivo serializador del mismo nombre"""
     serializer_class = serializers.CuadroSerializer
     queryset = Cuadro.objects.all()
     authentication_classes = (TokenAuthentication, )
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,IsAdminUser)
+
+    def list(self, request):
+        queryset = Cuadro.objects.all()
+        serializer = CuadroSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         queryset = Cuadro.objects.all()

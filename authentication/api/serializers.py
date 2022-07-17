@@ -94,14 +94,14 @@ class UserViewsetSerializer(serializers.ModelSerializer):
 class CuadroSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Cuadro
-        fields = ('name','img','user')
+        fields = ('name','img')
 
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""
         cuadro = models.Cuadro.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
-            author=validated_data['author']
+            
 
         )
         print(cuadro)

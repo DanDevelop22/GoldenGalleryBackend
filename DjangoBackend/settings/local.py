@@ -2,7 +2,8 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(
+os.path.join(__file__, os.pardir))))
 
 
 # Quick-start development settings - unsuitable for production
@@ -92,6 +93,7 @@ CORS_ALLOW_HEADERS = [
     
 ]
 
+
 ROOT_URLCONF = 'DjangoBackend.urls'
 
 TEMPLATES = [
@@ -119,7 +121,7 @@ WSGI_APPLICATION = 'DjangoBackend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -166,7 +168,15 @@ REST_FRAMEWORK = {
 'DEFAULT_AUTHENTICATION_CLASSES': (
 'rest_framework.authentication.BasicAuthentication',
 'rest_framework.authentication.SessionAuthentication',
-)
+),
+'DEFAULT_THROTTLE_CLASES':(
+    'rest_framework.throttling.AnonRateThrottle',
+    'rest_framework.throttling.UserRateThrottle',
+),
+'DEFAULT_THROTTLE_RATES':{
+    
+},
+
 }
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -197,7 +207,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+STATICFILES_DIRS = (str(os.path.join(BASE_DIR,'static')),)
 STATIC_URL = 'static/'
 
 # Default primary key field type
