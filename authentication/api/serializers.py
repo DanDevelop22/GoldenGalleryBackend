@@ -101,7 +101,7 @@ class CuadroSerializer(serializers.ModelSerializer):
         cuadro = models.Cuadro.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
-            author=validated_data['author']
+            
 
         )
         print(cuadro)
