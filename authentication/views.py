@@ -81,7 +81,7 @@ class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
-    #authentication_classes = (TokenAuthentication, )
+    authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
     
     filter_backends = (filters.SearchFilter,)
@@ -170,7 +170,7 @@ class CuadroViewset(viewsets.ModelViewSet):
     def destroy(self, request, pk=None):
         instance = self.get_object()
         self.perform_destroy(instance)
-        return Response(data={'detail':'Succesful delete'},status=status.HTTP_204_NO_CONTENT)
+        return Response(data={'detail':'Succesful delete'}, status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

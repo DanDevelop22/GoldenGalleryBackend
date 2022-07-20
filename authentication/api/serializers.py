@@ -94,7 +94,7 @@ class UserViewsetSerializer(serializers.ModelSerializer):
 class CuadroSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Cuadro
-        fields = ('name','img','user')
+        fields = ('name','img')
 
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""
