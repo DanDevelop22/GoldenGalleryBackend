@@ -22,7 +22,7 @@ from django.contrib.sessions.models import Session
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-
+from rest_framework.throttling import ScopedRateThrottle
 # Create your views here.
 
 class UserToken(Authentication,views.APIView):
@@ -81,6 +81,7 @@ class UserRegistrationAPI(CreateAPIView):
 
 class UserViewsets(viewsets.ModelViewSet):
     """APIViewset para los perfiles de usuario"""
+    
     serializer_class = serializers.UserViewsetSerializer
     queryset = UserProfile.objects.all()
     authentication_classes = (TokenAuthentication, )
@@ -129,6 +130,7 @@ class UserLoginApiView(ObtainAuthToken):
         if created:
             return Response(
                 {
+                'id':user.id,
                 'token': token.key,
                 'user':user.name,
                 'message':'Sucessful login',
@@ -146,6 +148,7 @@ class UserLoginApiView(ObtainAuthToken):
             token = Token.objects.create(user = user)
             return Response(
                 {
+                
                 'token': token.key,
                 'username':user.name,
                 'email':user.email,
@@ -158,6 +161,7 @@ class UserLoginApiView(ObtainAuthToken):
 
 class CuadroViewset(viewsets.ModelViewSet):
     """APIViewset es para el modelo cuadro tiene su respectivo serializador del mismo nombre"""
+    
     serializer_class = serializers.CuadroSerializer
     queryset = Cuadro.objects.all()
     authentication_classes = (TokenAuthentication, )
@@ -187,3 +191,18 @@ class CuadroViewset(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class UserCuadroViewset(viewsets.ModelViewSet):
+    """APIViewset para las relaciones de cuadros con usuario"""
+    serializer_class = serializers.UserCuadroSerializer
+    permission_classes = (IsAuthenticated,IsAdminUser)
+    authentication_classes = (TokenAuthentication, )
+    
+
+    def list(self, request):
+        queryset = Cuadro.objects.filter(user=request.auth.user)
+        serializer = serializers.UserCuadroSerializer(queryset, many=True, context={"request":request})
+        return Response(serializer.data)
+
+    

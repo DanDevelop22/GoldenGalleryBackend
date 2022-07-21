@@ -64,6 +64,7 @@ class Cuadro(models.Model):
     """Modelo con los datos de cada cuadro a tokenizar"""   
     name = models.CharField(max_length=255)
     img = models.ImageField(upload_to='static/paintings/%Y/%m/%d')
+    
     #user = models.OneToOneField(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
     user = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)

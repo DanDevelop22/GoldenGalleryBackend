@@ -6,6 +6,8 @@ from authentication import views
 router = DefaultRouter()
 router.register('user-viewset', views.UserViewsets, basename='user-viewset')
 router.register('cuadro-viewset',views.CuadroViewset,basename='cuadro-viewset')
+router.register('usercuadro-viewset',views.UserCuadroViewset,basename='usercuadro-viewset')
+
 urlpatterns = [
     path('', include(router.urls)),
     path('login/',views.UserLoginApiView.as_view()),
