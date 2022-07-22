@@ -1,12 +1,19 @@
 from rest_framework import serializers
+
 from authentication import models
 from django.contrib.auth import authenticate
 
 class UserSerializer(serializers.ModelSerializer): 
     """Serializa objetos de perfil de usuario"""
+    cuadros = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='cuadro-viewset'
+        )
+
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','password')
+        fields = ('id','email','password','cuadros')
         extra_keywords = {
             'password':{
                 'write_only': True,
@@ -61,9 +68,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     
 class UserViewsetSerializer(serializers.ModelSerializer):
     
+    paint = serializers.PrimaryKeyRelatedField(
+        many=True,
+        read_only=True,
+        
+        )
     class Meta:
         model = models.UserProfile
-        fields = ('id','email','name','password','is_staff','is_active')
+        fields = ('id','email','name','password','is_staff','is_active','paint')
         extra_keywords = {
             'password':{
                 'write_only': True,
@@ -91,10 +103,41 @@ class UserViewsetSerializer(serializers.ModelSerializer):
 
         return super().update(instance, validated_data) 
 
+class UserCuadroSerializer(serializers.ModelSerializer):
+    #img = serializers.Field(source='img.url')
+    img_url = serializers.SerializerMethodField()
+    user = serializers.PrimaryKeyRelatedField(many=False,
+        read_only=True,)
+    class Meta:
+        model = models.Cuadro
+        fields = ('name','img_url','user')
+
+    def get_img_url(self, cuadro):
+        request = self.context.get('request')
+        img_url = cuadro.img.url
+        return request.build_absolute_uri(img_url)
+
+
+    def create(self, validated_data):
+        """Crear y devolver un nuevo usuario"""
+        cuadro = models.Cuadro.objects.create(
+            name=validated_data['name'],
+            img=validated_data['img'],
+            
+
+        )
+        print(cuadro)
+        return cuadro
+
 class CuadroSerializer(serializers.ModelSerializer):
+    
+    
     class Meta:
         model = models.Cuadro
         fields = ('name','img')
+
+    
+
 
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""

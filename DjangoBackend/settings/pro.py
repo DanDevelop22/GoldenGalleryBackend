@@ -16,6 +16,8 @@ SECRET_KEY = 'django-insecure-4p=4%i*5bzpz=jv!%e@v9%goccxcmw_2n71qc9t+@g#9(ism6h
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
+
 # Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = ''
@@ -120,24 +122,24 @@ WSGI_APPLICATION = 'DjangoBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 # Configure Postgres database for local development
 #   Set these environment variables in the .env file for this project.  
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': os.environ['DBNAME'],
-#         'HOST': os.environ['DBHOST'],
-#         'USER': os.environ['DBUSER'],
-#         'PASSWORD': os.environ['DBPASS'] 
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DBNAME'],
+        'HOST': os.environ['DBHOST'],
+        'USER': os.environ['DBUSER'],
+        'PASSWORD': os.environ['DBPASS'] 
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
