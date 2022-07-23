@@ -75,7 +75,7 @@ class Cuadro(models.Model):
     
 
     class Meta:
-        db_table = 'Cuadros'
+        db_table = 'cuadros'
         ordering = ['name']
         verbose_name = "cuadro"
         verbose_name_plural = "Cuadros"
