@@ -61,7 +61,27 @@ class UserProfile(AbstractBaseUser, PermissionsMixin,models.Model):
         return self.email
 
 
-class Cuadro(models.Model):
+# class Cuadro(models.Model):
+#     """Modelo con los datos de cada cuadro a tokenizar"""   
+#     name = models.CharField(max_length=255)
+#     img = models.ImageField(upload_to='static/paintings/%Y/%m/%d')
+    
+#     #user = models.OneToOneField(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
+#     user = models.ForeignKey(UserProfile,on_delete=models.CASCADE,related_name='paint', unique=False, blank=True, null=True)
+#     date_created = models.DateTimeField(auto_now_add=True)
+#     date_updated = models.DateTimeField(auto_now=True)
+
+
+    
+
+#     class Meta:
+#         db_table = 'cuadros'
+#         ordering = ['name']
+#         verbose_name = "cuadro"
+#         verbose_name_plural = "Cuadros"
+        
+        
+class Paint(models.Model):
     """Modelo con los datos de cada cuadro a tokenizar"""   
     name = models.CharField(max_length=255)
     img = models.ImageField(upload_to='static/paintings/%Y/%m/%d')
@@ -75,9 +95,8 @@ class Cuadro(models.Model):
     
 
     class Meta:
-        db_table = 'cuadros'
         ordering = ['name']
-        verbose_name = "cuadro"
+        verbose_name = "Cuadro"
         verbose_name_plural = "Cuadros"
         
         

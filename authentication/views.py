@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.generics import CreateAPIView
 #De la app authentication
 from authentication.api.serializers import CuadroSerializer, UserViewsetSerializer
-from authentication.models import Cuadro, UserProfile, UserProfileManager
+from authentication.models import Paint, UserProfile, UserProfileManager
 from authentication.api import serializers, permissions
 from rest_framework.settings import api_settings
 from authentication import models
@@ -163,7 +163,7 @@ class CuadroViewset(viewsets.ModelViewSet):
     """APIViewset es para el modelo cuadro tiene su respectivo serializador del mismo nombre"""
     
     serializer_class = serializers.CuadroSerializer
-    queryset = Cuadro.objects.all()
+    queryset = Paint.objects.all()
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated,IsAdminUser)
 

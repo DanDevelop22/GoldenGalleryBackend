@@ -109,7 +109,7 @@ class UserCuadroSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(many=False,
         read_only=True,)
     class Meta:
-        model = models.Cuadro
+        model = models.Paint
         fields = ('name','img_url','user')
 
     def get_img_url(self, cuadro):
@@ -133,7 +133,7 @@ class CuadroSerializer(serializers.ModelSerializer):
     
     
     class Meta:
-        model = models.Cuadro
+        model = models.Paint
         fields = ('name','img')
 
     

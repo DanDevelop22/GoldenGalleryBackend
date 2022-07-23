@@ -7,6 +7,6 @@ class UserProfile(admin.ModelAdmin):
     list_display = ('id','email','is_active','is_staff')
     search_fields = ('email',)
 
-@admin.register(Cuadro)
+@admin.register(Paint)
 class Cuadro(admin.ModelAdmin):
     list_display = ('name','img')
