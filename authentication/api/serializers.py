@@ -120,7 +120,7 @@ class UserCuadroSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""
-        cuadro = models.Cuadro.objects.create(
+        cuadro = models.Paint.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
             
@@ -141,7 +141,7 @@ class CuadroSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Crear y devolver un nuevo usuario"""
-        cuadro = models.Cuadro.objects.create(
+        cuadro = models.Paint.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
             
