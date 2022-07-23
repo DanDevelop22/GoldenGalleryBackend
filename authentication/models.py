@@ -77,3 +77,6 @@ class Cuadro(models.Model):
         ordering = ['name']
         verbose_name = "cuadro"
         verbose_name_plural = "Cuadros"
+        
+        
+        
