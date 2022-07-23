@@ -60,6 +60,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin,models.Model):
     def __str__(self):
         return self.email
 
+
 class Cuadro(models.Model):
     """Modelo con los datos de cada cuadro a tokenizar"""   
     name = models.CharField(max_length=255)
