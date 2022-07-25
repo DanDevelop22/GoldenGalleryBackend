@@ -9,7 +9,9 @@ os.path.join(__file__, os.pardir))))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4p=4%i*5bzpz=jv!%e@v9%goccxcmw_2n71qc9t+@g#9(ism6h'
+#SECRET_KEY = 'django-insecure-4p=4%i*5bzpz=jv!%e@v9%goccxcmw_2n71qc9t+@g#9(ism6h'
+with open(os.path.join(BASE_DIR, 'secret_key.txt')) as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -218,10 +220,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.UserProfile'
 
-# SESSION_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = True
-# CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
 
-# SECURE_HSTS_SECONDS = 31536000 # 1year
-# SECURE_HSTS_PRELOAD = True
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_SECONDS = 31536000 # 1year
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
