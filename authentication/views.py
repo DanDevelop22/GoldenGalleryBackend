@@ -168,12 +168,12 @@ class CuadroViewset(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,IsAdminUser)
 
     def list(self, request):
-        queryset = Cuadro.objects.all()
+        queryset = Paint.objects.all()
         serializer = CuadroSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Cuadro.objects.all()
+        queryset = Paint.objects.all()
         cuadro = get_object_or_404(queryset, pk=pk)
         serializer = CuadroSerializer(cuadro)
         return Response(serializer.data)
@@ -201,7 +201,7 @@ class UserCuadroViewset(viewsets.ModelViewSet):
     
 
     def list(self, request):
-        queryset = Cuadro.objects.filter(user=request.auth.user)
+        queryset = Paint.objects.filter(user=request.auth.user)
         serializer = serializers.UserCuadroSerializer(queryset, many=True, context={"request":request})
         return Response(serializer.data)
 
