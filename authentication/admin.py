@@ -9,4 +9,4 @@ class UserProfile(admin.ModelAdmin):
 
 @admin.register(Paint)
 class Cuadro(admin.ModelAdmin):
-    list_display = ('name','img')
+    list_display = ('name','img','author','price')
