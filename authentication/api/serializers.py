@@ -110,7 +110,7 @@ class UserCuadroSerializer(serializers.ModelSerializer):
         read_only=True,)
     class Meta:
         model = models.Paint
-        fields = ('name','img_url','user')
+        fields = ('name','img_url','user','price','author','description')
 
     def get_img_url(self, cuadro):
         request = self.context.get('request')
@@ -123,7 +123,7 @@ class UserCuadroSerializer(serializers.ModelSerializer):
         cuadro = models.Paint.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
-            
+            price=validated_data['price']
 
         )
         print(cuadro)
@@ -134,7 +134,7 @@ class CuadroSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Paint
-        fields = ('name','img')
+        fields = ('name','img','price','author','description')
 
     
 
@@ -144,6 +144,9 @@ class CuadroSerializer(serializers.ModelSerializer):
         cuadro = models.Paint.objects.create(
             name=validated_data['name'],
             img=validated_data['img'],
+            author=validated_data['author'],
+            price=validated_data['price'],
+            description=validated_data['description']
             
 
         )
