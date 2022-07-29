@@ -238,5 +238,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 AZURE_ACCOUNT_NAME = "cs710032002079637da"
 AZURE_ACCOUNT_KEY = "l6xnd52XNH5PNJQJjfJ5hxduPUOKZg4/wHpQKVyGPt4k3A2+L8nwP8+QDg6vC7JpJqC9UonoIYxJ+AStrpdTRg=="
-AZURE_CONTAINER = "DefaultEndpointsProtocol=https;AccountName=cs710032002079637da;AccountKey=l6xnd52XNH5PNJQJjfJ5hxduPUOKZg4/wHpQKVyGPt4k3A2+L8nwP8+QDg6vC7JpJqC9UonoIYxJ+AStrpdTRg==;EndpointSuffix=core.windows.net"
+AZURE_CONTAINER = "ymgallerybackend"
 
