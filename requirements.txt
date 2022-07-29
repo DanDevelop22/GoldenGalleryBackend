@@ -21,3 +21,4 @@ sqlparse==0.4.2
 tzdata==2022.1
 Werkzeug==2.1.2
 whitenoise==6.1.0
+django-storages[azure]
