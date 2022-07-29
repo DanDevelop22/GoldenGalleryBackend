@@ -2,3 +2,4 @@
 db.sqlite3
 /static
 authentication/migrations/__pycache__/
+/media
