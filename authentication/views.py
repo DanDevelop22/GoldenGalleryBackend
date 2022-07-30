@@ -205,4 +205,17 @@ class UserCuadroViewset(viewsets.ModelViewSet):
         serializer = serializers.UserCuadroSerializer(queryset, many=True, context={"request":request})
         return Response(serializer.data)
 
+class CuadroOnSellViewset(viewsets.ModelViewSet):
+    """APIViewset para las relaciones de cuadros con usuario"""
+    serializer_class = serializers.CuadroSerializer
+    permission_classes = (IsAuthenticated,IsAdminUser)
+    authentication_classes = (TokenAuthentication, )
+    
+
+    def list(self, request):
+        queryset = Paint.objects.filter(on_sell=True)
+        serializer = serializers.UserCuadroSerializer(queryset, many=True, context={"request":request})
+        return Response(serializer.data)
+
+
     

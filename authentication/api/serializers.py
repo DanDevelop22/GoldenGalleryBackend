@@ -134,7 +134,7 @@ class CuadroSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.Paint
-        fields = ('name','img','price','author','description')
+        fields = ('name','img','price','author','description','on_sell')
 
     
 
@@ -146,7 +146,8 @@ class CuadroSerializer(serializers.ModelSerializer):
             img=validated_data['img'],
             author=validated_data['author'],
             price=validated_data['price'],
-            description=validated_data['description']
+            description=validated_data['description'],
+            on_sell=validated_data['on_sell']
             
 
         )
