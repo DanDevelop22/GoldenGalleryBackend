@@ -210,11 +210,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (str(os.path.join(BASE_DIR,'static')),)
-STATIC_URL = 'static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+STATIC_URL = '/static/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = 'media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = 'media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -222,7 +222,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'authentication.UserProfile'
 
-
+# Config HTTPS
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SECURE_SSL_HOST = ['ymgallerybackend.azurewebsites.net']
 SESSION_COOKIE_SECURE = True
@@ -232,3 +232,11 @@ CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000 # 1year
 SECURE_HSTS_PRELOAD = True
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+
+# Config Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_ACCOUNT_NAME = "cs710032002079637da"
+AZURE_ACCOUNT_KEY = "l6xnd52XNH5PNJQJjfJ5hxduPUOKZg4/wHpQKVyGPt4k3A2+L8nwP8+QDg6vC7JpJqC9UonoIYxJ+AStrpdTRg=="
+AZURE_CONTAINER = "ymgallerybackend"
+
